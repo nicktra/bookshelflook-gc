@@ -84,6 +84,7 @@ const getAllBooksHandler = (request, h) => {
   const { name, reading, finished } = request.query;
   let filterBook = books;
 
+  // eslint-disable-next-line max-len
   if (name)
     filterBook = filterBook.filter((book) =>
       book.name.toLowerCase().includes(name.toLowerCase())
@@ -112,7 +113,34 @@ const getAllBooksHandler = (request, h) => {
   return response;
 };
 
+const getBookByIdHandler = (request, h) => {
+  const { bookId } = request.params;
+
+  const book = books.filter((n) => n.id === bookId)[0];
+
+  if (book !== undefined) {
+    const response = h
+      .response({
+        status: "success",
+        data: {
+          book,
+        },
+      })
+      .code(200);
+    return response;
+  }
+
+  const response = h
+    .response({
+      status: "fail",
+      message: "Buku tidak ditemukan",
+    })
+    .code(404);
+  return response;
+};
+
 module.exports = {
   addBookHandler,
   getAllBooksHandler,
+  getBookByIdHandler,
 };
